@@ -9,7 +9,7 @@ using namespace std;
 
 
 // simulate a single hand of blackjack
-void simulateHand(Shoe& shoe, int starting_score, int wins, int losses, int draws) {
+void simulateHand(Shoe& shoe, int starting_score, int wins, int losses, int draws, map<int, std::pair<int, int>> &results) {
     // reset the card count
     shoe.resetCardCount();
 
@@ -59,6 +59,14 @@ void simulateHand(Shoe& shoe, int starting_score, int wins, int losses, int draw
     else {
         draws++;
     }
+   // results.insert({ starting_score, make_pair(wins, losses) });
+    //if condition if no key(starting score)
+    if (results.find(starting_score) != results.end()) {
+        wins += results[starting_score].first;
+        losses += results[starting_score].second;
+    }
+
+    results[starting_score] = make_pair(wins, losses);
 }
 
 int main() {
@@ -80,10 +88,10 @@ int main() {
         // randomly pick hit or stand
         int choice = hit_or_stand(g);
         if (choice == 0) {
-            simulateHand(shoe, score, results[score].first, results[score].second, 0);
+            simulateHand(shoe, score, results[score].first, results[score].second, 0, results);
         }
         else {
-            simulateHand(shoe, score, 0, results[score].second, results[score].first);
+            simulateHand(shoe, score, 0, results[score].second, results[score].first, results);
         }
     }
 

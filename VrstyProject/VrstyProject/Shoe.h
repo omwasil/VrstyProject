@@ -13,10 +13,18 @@ private:
     int card_count;
 
 public:
-
+    Shoe() {
+        card_count = 0;
+        for (int i = 0; i < 24; i++) {
+            //generate the cards of a single deck
+            for (int j = 1; j <= 13; j++) {
+                cards.push_back(j);
+            }
+        }
+    }
     Shoe(int num_decks) {
         card_count = 0;
-        for (int i = 0; i < num_decks; i++) {
+        for (int i = 0; i < num_decks * 4; i++) {
             //generate the cards of a single deck
             for (int j = 1; j <= 13; j++) {
                 cards.push_back(j);
@@ -35,7 +43,7 @@ public:
     int drawCard() {
         card_count++;
         // reshuffle the shoe if the card count is less than 100
-        if (card_count < 100) {
+        if (card_count > 100) {
             shuffle();
         }
         return cards[card_count - 1];
