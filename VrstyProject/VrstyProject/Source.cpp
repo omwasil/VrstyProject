@@ -1,18 +1,24 @@
 //Part 3 - Build a results table to show what strategy loses the least money
+#include <cstdlib>
 #include <iostream>
 #include <map>
 #include <random>
 #include<string>
 #include"Blackjack.h"
+#include "Player.h"
 
 using namespace std;
 
 
 // simulate a single hand of blackjack
-void simulateHand(Shoe& shoe, int starting_score, int wins, int losses, int draws, map<int, std::pair<int, int>> &results) {
+void simulateHand(Shoe& shoe, Player &p) {
     // reset the card count
-    shoe.resetCardCount();
 
+    //shoe.resetCardCount();
+    srand((unsigned)time(NULL));
+
+    // Get a random number
+    int random = rand();
     // the player starts with the given score
     int player_score = starting_score;
     int dealer_score = 0;
@@ -88,7 +94,7 @@ int main() {
         // randomly pick hit or stand
         int choice = hit_or_stand(g);
         if (choice == 0) {
-            simulateHand(shoe, score, results[score].first, results[score].second, 0, results);
+            simulateHand(shoe, player);
         }
         else {
             simulateHand(shoe, score, 0, results[score].second, results[score].first, results);

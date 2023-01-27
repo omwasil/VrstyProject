@@ -3,23 +3,37 @@
 //Part 2 - Blackjack game using classes and user input
 #include <iostream>
 #include <string>
-#include"Shoe.h"
-
+#include"Shoe.h
+#include "Player.h"
 
 class Blackjack {
 private:
-    int player_score;
-    int dealer_score;
+     vector<Player> players; //vector of players
+    int dealer_score; 
     Shoe shoe;
 
 public:
-    Blackjack(Shoe shoe) {
+    Blackjack(Shoe &shoe) {
         player_score = 0;
         dealer_score = 0;
         this->shoe = shoe;
     }
 
     // start the game
+
+
+    void intializeGame() {
+        int numPlayers;
+        cout << "";
+        cin >> numPlayers;
+
+        for (int i = 0; i < numPlayers; i++) {
+            cout << "Name of the Player: " << i << endl;
+            string name; 
+            cin >> name;
+            players.push_back(Player(name));
+        }
+    }
     void startGame() {
         cout << "Welcome to Blackjack!" << endl;
         cout << "You will play against the dealer." << endl;
