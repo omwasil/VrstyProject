@@ -6,12 +6,13 @@
 #include<string>
 #include"Blackjack.h"
 #include "Player.h"
+#include "Shoe.h"
 
 using namespace std;
 
 
 // simulate a single hand of blackjack
-void simulateHand(Shoe& shoe, Player &p) {
+void simulateHand(Shoe& shoe, Player *players, int numPlayers) {
     // reset the card count
 
     //shoe.resetCardCount();
@@ -20,7 +21,7 @@ void simulateHand(Shoe& shoe, Player &p) {
     // Get a random number
     int random = rand();
     // the player starts with the given score
-    int player_score = starting_score;
+    int player_score = 0;
     int dealer_score = 0;
 
     // deal the first two cards to the dealer
@@ -29,6 +30,15 @@ void simulateHand(Shoe& shoe, Player &p) {
     dealer_score = card1 + card2;
 
     // hit if the player's score is less than 17
+    for (int i = 0; i < numPlayers; i++) {
+        players[i].hit(shoe.drawCard());
+        players[i].hit(shoe.drawCard());
+        int currentScore = players[i].getTotalHandValue();
+        while (currentScore < 17) {
+            players[i].hit(shoe.drawCard());
+            currentScore = players[i].getTotalHandValue();
+        }
+    }
     while (player_score < 17) {
         int card = shoe.drawCard();
         player_score += card;
@@ -79,26 +89,25 @@ int main() {
     // create a shoe of 6 decks
     Shoe shoe(6);
     shoe.shuffle();
-
+    int numPlayers;
+    cout << "Enter how many players do you wish to add: ";
+    cin >> numPlayers;
+    Player* players = new Player[numPlayers];
+    string name;
+    for(int i = 0; i < numPlayers; i++) {
+        players[i] = new Player();
+        cout << "Enter the name of player" << (i + 1) << ": ";
+        cin >> name;
+        players[i].setName(name);
+    }
     // simulate 100,000 hands
     int num_hands = 100000;
-    map<int, std::pair<int, int>> results;
-    random_device rd;
-    mt19937 g(rd());
-    uniform_int_distribution<int> hit_or_stand(0, 1);
+    srand((unsigned)time(NULL));
+    // Get a random number
+    int random = rand();
     for (int i = 0; i < num_hands; i++) {
-        // pick a random starting score
-        uniform_int_distribution<int> starting_score(2, 21);
-        int score = starting_score(g);
+        simulateHand(shoe, players, numPlayers);
 
-        // randomly pick hit or stand
-        int choice = hit_or_stand(g);
-        if (choice == 0) {
-            simulateHand(shoe, player);
-        }
-        else {
-            simulateHand(shoe, score, 0, results[score].second, results[score].first, results);
-        }
     }
 
     // display the results
